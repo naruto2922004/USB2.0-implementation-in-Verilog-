@@ -18,7 +18,8 @@ always @(posedge clk or negedge rst_n) begin
         else
             crc16 <= {crc16[14:0], 1'b0};
     end
+    rx <= crc16;
 end
-assign rx = crc16;
+
 
 endmodule
