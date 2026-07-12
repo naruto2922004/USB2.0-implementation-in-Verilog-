@@ -1,0 +1,569 @@
+m255
+K4
+z2
+Z0 !s12c _opt2
+Z1 !s99 nomlopt
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+R0
+R1
+Z2 !s12c _opt1
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+R2
+R1
+!s12c _opt
+R1
+!s11f vlog 2025.2 2025.05, May 31 2025
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z3 dC:/Users/anish/Desktop/study/project/USB2.0/USB2.0-implementation-in-Verilog-
+T_opt
+!i145 1
+!i144 0
+!s110 1783671867
+Vh_`XZ6jK;>52dd<^92eP]1
+Z4 04 5 4 work tx_tb fast 0
+=1-50ebf6e2e1c5-6a50ac3a-156-2b78
+R1
+Z5 !s12f OEM100
+Z6 !s12b OEM100
+!s124 OEM10U7 
+Z7 !s135 nogc
+o-quiet -auto_acc_if_foreign -work work
+Z8 tCvgOpt 0 defaultOptions 1107585188
+n@_opt
+Z9 OL;O;2025.2;82
+R3
+T_opt1
+!i145 1
+!i144 0
+!s110 1783758154
+VLR^]H]f8K3<=CIZlEEERE3
+R4
+=1-50ebf6e2e1c5-6a51fd48-2ea-3528
+R1
+R5
+R6
+!s124 OEM10U6 
+R7
+Z10 o-quiet -auto_acc_if_foreign -work work +acc
+R8
+n@_opt1
+R9
+R3
+T_opt2
+!i145 1
+!i144 0
+!s110 1783780948
+V03P[MokIl:LJF]fenl^IL2
+04 6 4 work phy_tb fast 0
+=1-50ebf6e2e1c5-6a525654-109-2f1c
+R1
+R5
+R6
+!s124 OEM10U14 
+R7
+R10
+R8
+n@_opt2
+R9
+vasync_fifo
+Z11 2shared/async_fifo.v|shared/crc16_engine.v|shared/crc5_engine.v|shared/sync_fifo.v
+Z12 !s110 1783671536
+!i10b 1
+!s100 56[nRZ9DdjSPP8FEjVd^E2
+I@7ZG[d>Sd`CVz@FZY^A>=2
+R3
+w1783262666
+8shared/async_fifo.v
+Fshared/async_fifo.v
+!i122 2
+L0 3 58
+Z13 VDg1SIo80bB@j0V0VzS_@n1
+Z14 OL;L;2025.2;82
+r1
+!s85 0
+31
+Z15 !s108 1783671536.000000
+Z16 !s107 shared/sync_fifo.v|shared/crc5_engine.v|shared/crc16_engine.v|shared/async_fifo.v|
+Z17 !s90 -reportprogress|300|shared/async_fifo.v|shared/crc16_engine.v|shared/crc5_engine.v|shared/sync_fifo.v|
+!i113 0
+Z18 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
+Z19 tCvgOpt 0 defaultOptions 1085333592
+vbitstuffer
+Z20 2phy/rx/bitunstuffer.v|phy/rx/deserializer.v|phy/rx/diff_rx_sampler.v|phy/rx/eop_detect.v|phy/rx/nrzi_decoder.v|phy/rx/sync_detect.v|phy/tx/bitstuffer.v|phy/tx/diff_tx_driver.v|phy/tx/eop_gen.v|phy/tx/nrzi_encoder.v|phy/tx/serializer.v|sim/phy/phy.v|sim/phy/phy_tb.v|sim/phy/rx.v|sim/phy/tx.v|sim/phy/tx_tb.v
+Z21 !s110 1783780939
+!i10b 1
+!s100 az6HRZOfIK0mcAHAX=jHo1
+IU[Deceh?46aKz[OKTYT133
+R3
+w1783624570
+8phy/tx/bitstuffer.v
+Fphy/tx/bitstuffer.v
+!i122 30
+L0 7 37
+R13
+R14
+r1
+!s85 0
+31
+Z22 !s108 1783780939.000000
+Z23 !s107 sim/phy/tx_tb.v|sim/phy/tx.v|sim/phy/rx.v|sim/phy/phy_tb.v|sim/phy/phy.v|phy/tx/serializer.v|phy/tx/nrzi_encoder.v|phy/tx/eop_gen.v|phy/tx/diff_tx_driver.v|phy/tx/bitstuffer.v|phy/rx/sync_detect.v|phy/rx/nrzi_decoder.v|phy/rx/eop_detect.v|phy/rx/diff_rx_sampler.v|phy/rx/deserializer.v|phy/rx/bitunstuffer.v|
+Z24 !s90 -reportprogress|300|phy/rx/bitunstuffer.v|phy/rx/deserializer.v|phy/rx/diff_rx_sampler.v|phy/rx/eop_detect.v|phy/rx/nrzi_decoder.v|phy/rx/sync_detect.v|phy/tx/bitstuffer.v|phy/tx/diff_tx_driver.v|phy/tx/eop_gen.v|phy/tx/nrzi_encoder.v|phy/tx/serializer.v|sim/phy/phy.v|sim/phy/phy_tb.v|sim/phy/rx.v|sim/phy/tx.v|sim/phy/tx_tb.v|
+!i113 0
+R18
+R19
+vbitunstuffer
+R20
+R21
+!i10b 1
+!s100 @Z7]2WD1_XYWaicJH7VT@1
+IRbVYRdCao6^74E`7?n9H=0
+R3
+w1783710839
+8phy/rx/bitunstuffer.v
+Fphy/rx/bitunstuffer.v
+!i122 30
+L0 7 28
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vcrc16_engine
+R11
+R12
+!i10b 1
+!s100 =YdCSJn]WoQBK30I;o2L00
+I5PGz4izLfGGEi^C5_`_6b1
+R3
+w1783267542
+8shared/crc16_engine.v
+Fshared/crc16_engine.v
+!i122 2
+L0 5 20
+R13
+R14
+r1
+!s85 0
+31
+R15
+R16
+R17
+!i113 0
+R18
+R19
+vcrc5_engine
+R11
+R12
+!i10b 1
+!s100 Ll^HhDTDQ6Z@c1XbE5iPQ3
+I;4Fo<5IG6GoH_7do0B0[M2
+R3
+w1783267545
+8shared/crc5_engine.v
+Fshared/crc5_engine.v
+!i122 2
+L0 4 19
+R13
+R14
+r1
+!s85 0
+31
+R15
+R16
+R17
+!i113 0
+R18
+R19
+vdeserializer
+R20
+R21
+!i10b 1
+!s100 FfVg7NOmQMTMgc31;6B4n0
+I<bfa^T>NBA@A=U06f]CJn1
+R3
+w1783768060
+8phy/rx/deserializer.v
+Fphy/rx/deserializer.v
+!i122 30
+L0 4 31
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vdiff_rx_sampler
+R20
+R21
+!i10b 1
+!s100 c09n6`MNV8CjYE:VC;n_E2
+IhPiNm]A9X91^JQi0GmnYV1
+R3
+w1783766919
+8phy/rx/diff_rx_sampler.v
+Fphy/rx/diff_rx_sampler.v
+!i122 30
+L0 1 20
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vdiff_tx_driver
+R20
+R21
+!i10b 1
+!s100 `[k_ZMP5o]DPJ2Hbl1DDD1
+IHi]9;JT[o=]21FhU`8;GP0
+R3
+w1783624571
+8phy/tx/diff_tx_driver.v
+Fphy/tx/diff_tx_driver.v
+!i122 30
+L0 5 15
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+veop_detect
+R20
+R21
+!i10b 1
+!s100 KA0:GZD>`6ajCX[m<m<oR2
+IzEL:m;4IR<>MEU_AR[_Uz1
+R3
+w1783707837
+8phy/rx/eop_detect.v
+Fphy/rx/eop_detect.v
+!i122 30
+L0 1 27
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+veop_gen
+R20
+R21
+!i10b 1
+!s100 O4:]39957K^M=k3G5AoVQ2
+IAdnkmgENN2W3FTebmOYk71
+R3
+w1783694327
+8phy/tx/eop_gen.v
+Fphy/tx/eop_gen.v
+!i122 30
+L0 1 25
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vnrzi_decoder
+R20
+R21
+!i10b 1
+!s100 CVN=g_Q8mD380RlEeTb3B2
+IJS:V;J]n6aWk2<zIZ7l2A1
+R3
+w1783263847
+8phy/rx/nrzi_decoder.v
+Fphy/rx/nrzi_decoder.v
+!i122 30
+L0 2 19
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vnrzi_encoder
+R20
+R21
+!i10b 1
+!s100 6>YFG`T8a_z0T8:I<9;EE1
+IEe3d4JaI0>l==kg`:IERa3
+R3
+w1783699693
+8phy/tx/nrzi_encoder.v
+Fphy/tx/nrzi_encoder.v
+!i122 30
+L0 5 37
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vphy
+R20
+R21
+!i10b 1
+!s100 Gk8Y4^F?zZe39A9f:L8HT2
+IlNmDG;3gNm_@DeF7;U7Dk2
+R3
+w1783757282
+8sim/phy/phy.v
+Fsim/phy/phy.v
+!i122 30
+L0 1 40
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vphy_tb
+R20
+R21
+!i10b 1
+!s100 C=ioYY3S?7P[<hjzPbP8Y2
+I6UYOS0R^W?@kPozhInJO91
+R3
+Z25 w1783780929
+Z26 8sim/phy/phy_tb.v
+Z27 Fsim/phy/phy_tb.v
+!i122 30
+L0 3 99
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vrx
+R20
+R21
+!i10b 1
+!s100 ?iokKUa1Bn1Z3XkokT0h60
+I8Q1L`TZ@Ag5Hz?>j:ae063
+R3
+R25
+8sim/phy/rx.v
+Fsim/phy/rx.v
+R26
+R27
+!i122 30
+L0 1 71
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vserializer
+R20
+R21
+!i10b 1
+!s100 VOk6dmPRc[cFDX5:;<<dZ3
+IQE3h7CK@g]jJKR=dGKgWZ0
+R3
+w1783690807
+8phy/tx/serializer.v
+Fphy/tx/serializer.v
+!i122 30
+L0 39 66
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vsync_detect
+R20
+R21
+!i10b 1
+!s100 GnSibNeG5z6cVIbBmU;D01
+I40k@IA`Jc^n:mT=<8LBfM0
+R3
+w1783762434
+8phy/rx/sync_detect.v
+Fphy/rx/sync_detect.v
+!i122 30
+L0 2 31
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vsync_fifo
+R11
+R12
+!i10b 1
+!s100 nlffbJDd471Ij4;zKgn@_1
+ID;Fb_9on?R^Kc9[i[6^aV3
+R3
+w1783262697
+8shared/sync_fifo.v
+Fshared/sync_fifo.v
+!i122 2
+L0 1 39
+R13
+R14
+r1
+!s85 0
+31
+R15
+R16
+R17
+!i113 0
+R18
+R19
+vtx
+R20
+R21
+!i10b 1
+!s100 []<MLSb^1]I5K2o3UafEE1
+IODkC5jgd_Ne?2M9@9Un8_1
+R3
+R25
+8sim/phy/tx.v
+Fsim/phy/tx.v
+R26
+R27
+!i122 30
+L0 5 60
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19
+vtx_tb
+R20
+R21
+!i10b 1
+!s100 c50YNXN>_=:HEPJ7056DL2
+InkW^eGf]CTAfBJ;29TH481
+R3
+w1783762748
+8sim/phy/tx_tb.v
+Fsim/phy/tx_tb.v
+!i122 30
+L0 3 121
+R13
+R14
+r1
+!s85 0
+31
+R22
+R23
+R24
+!i113 0
+R18
+R19

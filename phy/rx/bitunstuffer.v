@@ -6,7 +6,7 @@
 // Error handling is left to the higher protocol layers.
 module bitunstuffer (
     input wire clk, rst_n, data_in, full_speed,
-    output reg data_out, stuff_error,
+    output reg data_out, 
     output wire stall_downstream
 );
     
@@ -16,25 +16,19 @@ module bitunstuffer (
         if (!rst_n) begin
             one_count <= 3'b000;
             data_out <= full_speed;
-            stuff_error <= 1'b0;
         end else begin
-            if(one_count == 3'b110) begin
-                if(data_in == 1'b1)
-                    stuff_error <= 1'b1;
-                one_count <= 3'b000; // data_out is ignored while stall_downstream is asserted.
-            end
+            if(one_count == 3'b110) 
+                one_count <= 3'b000;
             else if (data_in == 1'b1) begin
-                stuff_error <= 1'b0;
                 one_count <= one_count + 1'b1;
                 data_out <= 1'b1;
             end
             else begin
-                stuff_error <= 1'b0;
                 one_count <= 3'b000;
                 data_out <= 1'b0;
             end
         end
     end
 
-assign stall_downstream = (one_count == 3'b110) ? 1'b1 : 1'b0;
+assign stall_downstream = (one_count == 3'b110);
 endmodule

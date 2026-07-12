@@ -1,5 +1,6 @@
 module eop_detect (
-    input wire clk, rst_n, dp, dm, full_speed,
+    input wire clk, rst_n, full_speed,
+    input wire [1:0] line_state,
     output wire eop_detected
 );
 
@@ -14,12 +15,13 @@ module eop_detect (
 
     always @(*) begin
         case (ps)
-            2'b00: ns = (!dp && !dm) ? 2'b01 : 2'b00;
-            2'b01: ns = (!dp && !dm) ? 2'b10 : 2'b00;
-            2'b10: ns = (full_speed && dp && !dm) ? 2'b11 : (!full_speed && !dp && dm) ? 2'b11 :(!dp && !dm) ? 2'b10 : 2'b00;
+            2'b00: ns = (line_state == 2'b10) ? 2'b01 : 2'b00;
+            2'b01: ns = (line_state == 2'b10) ? 2'b10 : 2'b00;
+            2'b10: ns = (full_speed && line_state == 2'b01) ? 2'b11 : (!full_speed && line_state == 2'b00) ? 
+                        2'b11 :(line_state == 2'b10) ? 2'b10 : 2'b00;
             2'b11: ns = 2'b00;
             default: ns = 2'b00;
         endcase
     end
-    assign eop_detected = (ps == 2'b11) ? 1'b1 : 1'b0;
+    assign eop_detected = (ps == 2'b11);
 endmodule
