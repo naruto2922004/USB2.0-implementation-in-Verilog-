@@ -1,7 +1,0 @@
-1 10 serializer 4 fast 82 C:/Users/anish/Desktop/study/project/USB2.0/USB2.0-implementation-in-Verilog-/work 0 0 0 0 130 0
-1 10 bitstuffer 4 fast 82 C:/Users/anish/Desktop/study/project/USB2.0/USB2.0-implementation-in-Verilog-/work 0 0 0 0 63 0
-1 12 nrzi_encoder 4 fast 82 C:/Users/anish/Desktop/study/project/USB2.0/USB2.0-implementation-in-Verilog-/work 0 0 0 0 39 0
-1 7 eop_gen 4 fast 82 C:/Users/anish/Desktop/study/project/USB2.0/USB2.0-implementation-in-Verilog-/work 0 0 0 0 43 0
-1 14 diff_tx_driver 4 fast 82 C:/Users/anish/Desktop/study/project/USB2.0/USB2.0-implementation-in-Verilog-/work 0 0 0 0 33 0
-1 2 tx 4 fast 82 C:/Users/anish/Desktop/study/project/USB2.0/USB2.0-implementation-in-Verilog-/work 0 0 180224 0 437 0
-1 5 tx_tb 4 fast 82 C:/Users/anish/Desktop/study/project/USB2.0/USB2.0-implementation-in-Verilog-/work 0 0 180224 0 559 0

@@ -14,7 +14,7 @@ module phy (
     inout dm
 );
 
-    tx u_tx (
+    tx_sim u_tx (
         .clk(clk),
         .rst_n(rst_n),
         .transfering(transfering),
@@ -26,7 +26,7 @@ module phy (
         .dm(dm)
     );
 
-    rx u_rx (
+    rx_sim u_rx (
         .clk(clk),
         .rst_n(rst_n),
         .dp(dp),

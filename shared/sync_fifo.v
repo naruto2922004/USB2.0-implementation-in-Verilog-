@@ -1,7 +1,8 @@
+//PTR_WIDTH is log2(DEPTH)
 module sync_fifo #(
-    parameter DEPTH = 16,
+    parameter DEPTH = 1024,
     parameter WIDTH = 8,
-    parameter PTR_WIDTH = 4 
+    parameter PTR_WIDTH = 10
 )(
     input wire clk, rst_n, wr_en, rd_en,
     input wire [WIDTH-1:0] din,

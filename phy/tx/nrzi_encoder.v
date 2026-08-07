@@ -4,6 +4,7 @@
 // begins from the correct line state.
 module nrzi_encoder (
     input wire clk, rst_n, data_in, serial_valid,
+    input [1:0] speed,
     output reg packet_done,
     output reg [1:0]line_state
 );
@@ -11,7 +12,7 @@ module nrzi_encoder (
     reg [1:0] bit_count;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n || (state == 2'b00))begin
-            line_state <= 2'b01 ;
+            line_state <= (speed == 2'b11)? 2'b00 : 2'b01;
             bit_count <= 2'd0;
             packet_done <= 1'b0;
             if(!rst_n)

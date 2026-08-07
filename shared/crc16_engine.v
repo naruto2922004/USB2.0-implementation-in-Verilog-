@@ -1,24 +1,38 @@
-// CRC engine runs continuously.
-// Assert reset before processing each new packet.
-// CRC output is valid only immediately after the last valid input bit.
 
 module crc16_engine (
-    input rst_n, clk, data_in,
-    output reg [15:0]rx
+    input rst_n, clk, data_valid,
+    input [7:0] data_in,
+    output [15:0] rx_out
 );
+    reg [15:0] rx;
+    reg [7:0] buffer;
+    reg [2:0] bit_count;
 
-reg [15:0] crc16;
-always @(posedge clk or negedge rst_n) begin
-    if (!rst_n)
-        crc16 <= 16'hFFFF;
-    else begin
-        if(data_in^crc16[15])
-            crc16 <= {crc16[14:0], 1'b0} ^ 16'h8005;
-        else
-            crc16 <= {crc16[14:0], 1'b0};
+    assign rx_out = ~rx; 
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            rx <= 16'hFFFF;
+        else begin
+            if(data_valid)begin
+                buffer <= {1'b0, data_in[7:1]};
+                bit_count <= 3'd0;
+                
+                if(data_in[0] ^ rx[0])
+                    rx <= {1'b0, rx[15:1]} ^ 16'hA001;
+                else
+                    rx <= {1'b0, rx[15:1]};
+            end
+            else if(bit_count != 3'b111)begin
+                buffer <= {1'b0, buffer[7:1]};
+                bit_count <= bit_count + 1'b1;
+                
+                if(buffer[0] ^ rx[0])
+                    rx <= {1'b0, rx[15:1]} ^ 16'hA001;
+                else
+                    rx <= {1'b0, rx[15:1]};
+            end
+        end
     end
-    rx <= crc16;
-end
-
 
 endmodule

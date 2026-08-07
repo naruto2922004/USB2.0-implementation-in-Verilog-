@@ -5,7 +5,7 @@
 // an indication that a bit-stuffing error occurred in the current packet.
 // Error handling is left to the higher protocol layers.
 module bitunstuffer (
-    input wire clk, rst_n, data_in, full_speed,
+    input wire clk, rst_n, idle, data_in,
     output reg data_out, 
     output wire stall_downstream
 );
@@ -13,9 +13,9 @@ module bitunstuffer (
     reg [2:0] one_count;
 
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (!rst_n || idle) begin
             one_count <= 3'b000;
-            data_out <= full_speed;
+            data_out <= 1'b1;
         end else begin
             if(one_count == 3'b110) 
                 one_count <= 3'b000;
