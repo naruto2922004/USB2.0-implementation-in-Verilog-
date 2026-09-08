@@ -126,7 +126,7 @@ module usb_mouse_tb;
         end else begin
             ep1_valid <= 1'b1;
             if (ep1_sent) begin
-                ep1_in <= ep1_in + 64'h01; // easy-to-spot pattern change per report
+                ep1_in <= ep1_in + 64'h01; 
                 reports_sent <= reports_sent + 1;
             end
         end
@@ -199,7 +199,7 @@ R
         sw_endpoint       = 4'd1;
         sw_transfer_type  = 2'b01; // Interrupt
         sw_direction      = 1'b1; // IN
-        sw_interval       = 8'd2; // shortened from the real bInterval for sim speed
+        sw_interval       = 8'd2; // shortened
         sw_transfer_start = 1'b1;
         @(posedge clk);
         sw_transfer_start = 1'b0;
@@ -252,7 +252,7 @@ R
 
 
     initial begin
-        #20_000_000; // 20 ms absolute cap
+        #20_000_000; // 20 ms
         $display("[%0t] WATCHDOG TIMEOUT - simulation did not complete", $time);
         $finish;
     end
