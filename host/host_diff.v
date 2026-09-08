@@ -100,54 +100,54 @@ module host_diff #(
                         temp_state <= 2'b00;
                         host_en <= 1'b0;
                     end
-                    else
+                    else begin
                         counter <= counter + 1'b1;
-                    if(counter >= RECOVERY_TAIL && temp_state != 2'b11)begin
-                        temp_state <= 2'b11;
-                        host_en <= 1'b1;
-                        rst_dm <= 1'b0;
-                        rst_dp <= 1'b0;
-                    end
-                        
-                    else if(temp_state == 2'b00)begin
-                        host_en <= 1'b1;
-                        rst_dm <= 1'b0;
-                        rst_dp <= 1'b0;
-                        if(counter >= DEVICE_CHIRP_MAX)
+                        if(counter >= RECOVERY_TAIL && temp_state != 2'b11)begin
                             temp_state <= 2'b11;
-                        else if (temp_counter >= DEVICE_CHIRP_LENGTH) begin
-                            temp_state <= 2'b01;
-                            speed <= 2'b11;
-                            temp_counter <= 20'd0;
+                            host_en <= 1'b1;
+                            rst_dm <= 1'b0;
+                            rst_dp <= 1'b0;
                         end
-                        else if(!rx_dp && rx_dm)
-                            temp_counter <= temp_counter + 1'b1;
-                        else
-                            temp_counter <= 20'd0;
-                    end
-                    else if (temp_state == 2'b01) begin
-                        host_en <= 1'b1;
-                        rst_dp <= 1'b0;
-                        rst_dm <= 1'b1;
-                        if(temp_counter >= HOST_CHIRP_LENGTH)begin
-                            temp_state <= 2'b10;
-                            temp_counter <= 20'd0;
+                            
+                        else if(temp_state == 2'b00)begin
+                            host_en <= 1'b1;
+                            rst_dm <= 1'b0;
+                            rst_dp <= 1'b0;
+                            if(counter >= DEVICE_CHIRP_MAX)
+                                temp_state <= 2'b11;
+                            else if (temp_counter >= DEVICE_CHIRP_LENGTH) begin
+                                temp_state <= 2'b01;
+                                speed <= 2'b11;
+                                temp_counter <= 20'd0;
+                            end
+                            else if(!rx_dp && rx_dm)
+                                temp_counter <= temp_counter + 1'b1;
+                            else
+                                temp_counter <= 20'd0;
                         end
-                        else
-                            temp_counter <= temp_counter + 1'b1;
-                    end
-                    else if (temp_state == 2'b10) begin
-                        host_en <= 1'b1;
-                        rst_dp <= 1'b1;
-                        rst_dm <= 1'b0;
-                        if(temp_counter >= HOST_CHIRP_LENGTH)begin
-                            temp_state <= 2'b01;
-                            temp_counter <= 20'd0;
+                        else if (temp_state == 2'b01) begin
+                            host_en <= 1'b1;
+                            rst_dp <= 1'b0;
+                            rst_dm <= 1'b1;
+                            if(temp_counter >= HOST_CHIRP_LENGTH)begin
+                                temp_state <= 2'b10;
+                                temp_counter <= 20'd0;
+                            end
+                            else
+                                temp_counter <= temp_counter + 1'b1;
                         end
-                        else
-                            temp_counter <= temp_counter + 1'b1;
-                    end
-                        
+                        else if (temp_state == 2'b10) begin
+                            host_en <= 1'b1;
+                            rst_dp <= 1'b1;
+                            rst_dm <= 1'b0;
+                            if(temp_counter >= HOST_CHIRP_LENGTH)begin
+                                temp_state <= 2'b01;
+                                temp_counter <= 20'd0;
+                            end
+                            else
+                                temp_counter <= temp_counter + 1'b1;
+                        end
+                    end  
                         
                 end
                 2'b10: begin

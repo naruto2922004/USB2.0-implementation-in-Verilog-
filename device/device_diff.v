@@ -33,10 +33,6 @@ module device_diff #(
     localparam HOST_CHIRP_MAX_LENGTH = (CLK_FREQ / 1000000) * 60;   
     localparam HOST_CHIRP_DELAY      = (CLK_FREQ / 1000000) * 100;     
 
-    // localparam RESET_DEBOUNCE = 1;
-    // localparam DEVICE_CHIRP_LENGTH  = 1;
-    // localparam HOST_CHIRP_MAX_LENGTH  = 2;
-    // localparam HOST_CHIRP_DELAY  = 2;
 
 
     reg [19:0] counter;
@@ -155,6 +151,7 @@ module device_diff #(
                         state <= 2'b11;
                         temp_state <= 2'b00;
                         device_reset_n <= 1'b1;
+                        counter <= 20'd0;
                     end
 
                 end

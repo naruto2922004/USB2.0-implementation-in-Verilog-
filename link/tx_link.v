@@ -92,7 +92,11 @@ module tx_link (
                                 fifo_read <= 1'b1;
                                 temp_state <= 3'b001;
                             end 
-                            else 
+                            else if(pid_buffer[1:0] == 2'b11)begin
+                                state <= 2'b11;
+                                temp_state <= 3'b010;
+                            end
+                            else
                                 state <= 2'b00;
                         end 
                         else if (temp_state == 3'b001) begin
@@ -175,7 +179,6 @@ module tx_link (
                         else if((temp_state == 3'b101)  && (packet_done))
                             state <= 2'b00;
                     end 
-
                     else if ((temp_state == 3'b001) && buffer_loaded) begin
                         state <= 2'b01;
                         fifo_read <= 1'b1;

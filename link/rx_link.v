@@ -4,20 +4,22 @@
 // FIFO empty =    2'b10
 // packet corupt = 2'b11
 module rx_link (
-    input clk, rst_n, byte_valid, phy_done, fifo_read, read_done,
+    input clk, rst_n, byte_valid, phy_done, fifo_read, read_done, accept_data, fifo_rst_in,
     input [7:0] phy_data,
     output [7:0] fifo_out,
     output reg [3:0] pid,
-    output [1:0] status
+    output [1:0] status,
+    output reg data_pid_valid
 );
     reg [1:0] state, temp_state, temp_status;
     reg [7:0] crc_in, fifo_in, buff1, buff2;
     wire [4:0] crc5_rx;
     wire [15:0] crc16_rx;
     reg [2:0] bit_count;
-    reg crc5_rst_n, crc16_rst_n, fifo_rst_n, fifo_wr, crc_valid, crc_halt; 
-    wire full, empty;
+    reg crc5_rst_n, crc16_rst_n, fifo_wr, crc_valid, crc_halt; 
+    wire full, empty, fifo_rst_n;
     assign status = (temp_status == 2'b01 && empty)? 2'b10 : temp_status;
+    assign fifo_rst_n = !(!rst_n || !fifo_rst_in);
     
     crc5_engine crc5 (
         .rst_n(crc5_rst_n),
@@ -61,26 +63,22 @@ module rx_link (
             fifo_in <= 8'h00;
             crc5_rst_n <= 1'b0;
             crc16_rst_n <= 1'b0;
-            fifo_rst_n <= 1'b0;
-            fifo_wr <= 1'b0;
             crc_valid <= 1'b0;
             crc_halt <= 1'b0;
             bit_count <= 3'd0;
+            data_pid_valid <= 1'b0;
         end
         else begin
             case(state)
                 2'b00: begin
                     if(temp_state == 2'b00)begin
-                        pid <= 4'd0;
                         crc_in <= 8'h00;
                         fifo_in <= 8'h00;
                         crc5_rst_n <= 1'b0;
                         crc16_rst_n <= 1'b0;
-                        fifo_rst_n <= 1'b1;
                         fifo_wr <= 1'b0;
                         crc_valid <= 1'b0;
                         crc_halt <= 1'b0;
-                        bit_count <= 3'd0;
                     end
                     if((temp_state == 2'b01) && phy_done) // pid error buffer
                         temp_state <= 2'b10;
@@ -88,6 +86,8 @@ module rx_link (
                         if(read_done)begin
                             temp_state <= 2'b00;
                             temp_status <= 2'b00;
+                            bit_count <= 3'd0;
+                            pid <= 4'd0;
                         end
                         else
                             temp_status <= 2'b11; 
@@ -96,12 +96,30 @@ module rx_link (
                         if(read_done)begin
                             temp_state <= 2'b00;
                             temp_status <= 2'b00;
+                            bit_count <= 3'd0;
+                            pid <= 4'd0;
                         end
                         else
                             temp_status <= 2'b01;
                     end
 
-                    if(byte_valid && (temp_state == 2'b00))begin
+                    if (data_pid_valid) begin
+                        if(bit_count == 3'd7)begin
+                            pid <= 4'd0;
+                            data_pid_valid <= 1'b0;
+                            state <= 2'b00;
+                            temp_state <= 2'b00;
+                        end
+                        else if (accept_data) begin
+                            state <= 2'b11;
+                            temp_state <= 2'b00;
+                            data_pid_valid <= 1'b0;
+                            bit_count <= 3'd0;
+                        end
+                        else
+                            bit_count <= bit_count + 1'b1;
+                    end
+                    else if(byte_valid && (temp_state == 2'b00))begin
                         pid <= phy_data[3:0];
                         if(phy_data[7:4] == ~phy_data[3:0])begin
                             temp_state <= 2'b00;
@@ -110,7 +128,7 @@ module rx_link (
                             else if ((phy_data[1:0] == 2'b01) || (phy_data[3:0] == 4'b0100)) // token
                                 state <= 2'b10;
                             else if (phy_data[1:0] == 2'b11) // data
-                                state <= 2'b11;
+                                data_pid_valid <= 1'b1;
                         end
                         else if(phy_data[7:4] != ~phy_data[3:0])begin
                             temp_state <= 2'b01;
@@ -127,6 +145,7 @@ module rx_link (
                             temp_state <= 2'b00;
                             state <= 2'b00;
                             temp_status <= 2'b00;
+                            pid <= 4'd0;
                         end
                         else
                             temp_status <= 2'b01;
@@ -146,7 +165,6 @@ module rx_link (
                             crc5_rst_n <= 1'b1;
                             crc_valid <= 1'b1;
                             crc_in <= buff2;
-                            fifo_rst_n <= 1'b1;
                             fifo_wr <= 1'b1;
                             fifo_in <= buff2;
                             buff2 <= phy_data;
@@ -195,7 +213,7 @@ module rx_link (
                         temp_state <= 2'b10;
                     end
                     else if(temp_state == 2'b10)begin
-                        if(crc_valid)
+                        if(crc_valid && !byte_valid)
                             crc_valid <= 1'b0;
                         if(fifo_wr)
                             fifo_wr <= 1'b0;
@@ -203,7 +221,6 @@ module rx_link (
                             crc16_rst_n <= 1'b1;
                             crc_valid <= 1'b1;
                             crc_in <= buff2;
-                            fifo_rst_n <= 1'b1;
                             fifo_wr <= 1'b1;
                             fifo_in <= buff2;
                             buff2 <= buff1;

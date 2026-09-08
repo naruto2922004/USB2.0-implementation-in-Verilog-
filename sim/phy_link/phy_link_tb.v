@@ -11,7 +11,7 @@ module phy_link_tb;
     reg por_rst_n;
     reg connected;
 
-    // Device IOs
+
     reg        dev_next_packet;
     reg        dev_tx_fifo_wr;
     reg        dev_rx_fifo_read;
@@ -25,7 +25,6 @@ module phy_link_tb;
     wire       dev_tx_fifo_full;
     wire       dev_rst_n;
 
-    // Host IOs
     reg        host_start_rst;
     reg        host_next_packet;
     reg        host_tx_fifo_wr;
@@ -40,22 +39,15 @@ module phy_link_tb;
     wire       host_tx_busy;
     wire       host_tx_fifo_full;
 
-    // Test data
     reg [7:0] host_payload [0:7];
     reg [7:0] dev_payload  [0:7];
     integer   i;
 
-    //--------------------------------------------------------------
-    // Testbench progress markers - add these to the waveform
-    // (set radix to ASCII/string) to see exactly where the TB is,
-    // including which sub-step inside a task it is parked on.
-    //--------------------------------------------------------------
+
     reg [8*24-1:0] tb_phase; // which top-level block of the sequence
     reg [8*24-1:0] tb_stage; // fine-grained step within that block
 
-    //--------------------------------------------------------------
-    // DUT
-    //--------------------------------------------------------------
+
     phy_link #(
         .CLK_FREQ (CLK_FREQ),
         .MAX_SPEED(MAX_SPEED)
@@ -92,15 +84,11 @@ module phy_link_tb;
         .host_tx_fifo_full (host_tx_fifo_full)
     );
 
-    //--------------------------------------------------------------
-    // Clock generation
-    //--------------------------------------------------------------
+
     initial clk = 1'b0;
     always #(CLK_PERIOD/2) clk = ~clk;
 
-    //--------------------------------------------------------------
-    // Wait for a positive edge on dev_rst_n
-    //--------------------------------------------------------------
+
     task wait_dev_rst_n_posedge;
         begin
             tb_stage = "WAIT_DEV_RST_POSEDGE";
@@ -108,11 +96,7 @@ module phy_link_tb;
         end
     endtask
 
-    //--------------------------------------------------------------
-    // Wait for dev_rst_n to go low first, then for its next positive
-    // edge. Used around reconnect, so the testbench does not latch
-    // onto the tail end of a reset sequence that already completed.
-    //--------------------------------------------------------------
+
     task wait_dev_rst_n_reconnect;
         begin
             tb_stage = "WAIT_DEV_RST_NEGEDGE";
@@ -124,14 +108,12 @@ module phy_link_tb;
         end
     endtask
 
-    //--------------------------------------------------------------
-    // Host -> Device transfer
-    //--------------------------------------------------------------
+
     task host_to_device_transfer;
         input [3:0] pid;
         integer idx;
         begin
-            // Load host TX FIFO
+
             tb_stage = "H2D_LOAD_TX_FIFO";
             @(posedge clk);
             host_tx_fifo_wr <= 1'b1;
@@ -141,14 +123,13 @@ module phy_link_tb;
             end
             host_tx_fifo_wr <= 1'b0;
 
-            // Kick off transmission
+
             tb_stage = "H2D_START_TX";
             host_tx_pid      <= pid;
             host_next_packet <= 1'b1;
             @(posedge clk);
             host_next_packet <= 1'b0;
 
-            // Wait for transmission to actually start and finish
             tb_stage = "H2D_WAIT_TX_BUSY_ASSERT";
             @(posedge clk);
             while (host_tx_busy == 1'b0) begin
@@ -159,7 +140,6 @@ module phy_link_tb;
                 @(posedge clk);
             end
 
-            // Monitor device RX status
             tb_stage = "H2D_WAIT_RX_STATUS";
             @(posedge clk);
             while (dev_rx_status == 2'b00) begin
@@ -185,9 +165,7 @@ module phy_link_tb;
         end
     endtask
 
-    //--------------------------------------------------------------
-    // Device -> Host transfer
-    //--------------------------------------------------------------
+
     task device_to_host_transfer;
         input [3:0] pid;
         integer idx;
@@ -202,14 +180,14 @@ module phy_link_tb;
             end
             dev_tx_fifo_wr <= 1'b0;
 
-            // Kick off transmission
+
             tb_stage = "D2H_START_TX";
             dev_tx_pid      <= pid;
             dev_next_packet <= 1'b1;
             @(posedge clk);
             dev_next_packet <= 1'b0;
 
-            // Wait for transmission to actually start and finish
+
             tb_stage = "D2H_WAIT_TX_BUSY_ASSERT";
             @(posedge clk);
             while (dev_tx_busy == 1'b0) begin
@@ -220,7 +198,7 @@ module phy_link_tb;
                 @(posedge clk);
             end
 
-            // Monitor host RX status
+
             tb_stage = "D2H_WAIT_RX_STATUS";
             @(posedge clk);
             while (host_rx_status == 2'b00) begin
@@ -246,14 +224,11 @@ module phy_link_tb;
         end
     endtask
 
-    //--------------------------------------------------------------
-    // Stimulus
-    //--------------------------------------------------------------
+
     initial begin
         tb_phase = "INIT";
         tb_stage = "SIGNAL_INIT";
 
-        // Init all inputs
         por_rst_n         = 1'b0;
         connected         = 1'b0;
 
@@ -274,13 +249,12 @@ module phy_link_tb;
         host_tx_pid       = 4'h0;
         host_rx_pid       = 4'h0;
 
-        // Test payloads
+
         for (i = 0; i < 8; i = i + 1) begin
             host_payload[i] = i + 8'h10;
             dev_payload[i]  = i + 8'h80;
         end
 
-        // Power-on reset, device disconnected
         tb_phase = "POR_RESET";
         tb_stage = "ASSERT_POR_RST";
         repeat (10) @(posedge clk);
@@ -288,14 +262,14 @@ module phy_link_tb;
         tb_stage = "POR_RST_RELEASED";
         repeat (5) @(posedge clk);
 
-        // Connect device - host performs attach/speed detect/reset
+
         tb_phase = "INITIAL_CONNECT";
         tb_stage = "ASSERT_CONNECTED";
         connected = 1'b1;
         wait_dev_rst_n_posedge;
         tb_stage = "CONNECT_RESET_DONE";
 
-        // Host-initiated reset
+
         tb_phase = "HOST_RESET";
         tb_stage = "PULSE_HOST_START_RST";
         @(posedge clk);
@@ -305,28 +279,23 @@ module phy_link_tb;
         wait_dev_rst_n_posedge;
         tb_stage = "HOST_RESET_DONE";
 
-        // Host -> Device transfer
         tb_phase = "INITIAL_H2D";
         host_to_device_transfer(4'h3);
 
-        // Device -> Host transfer
         tb_phase = "INITIAL_D2H";
         device_to_host_transfer(4'hB);
 
-        // Disconnect
         tb_phase = "DISCONNECT";
         tb_stage = "DEASSERT_CONNECTED";
         connected = 1'b0;
         repeat (10) @(posedge clk);
 
-        // Reconnect - full re-attach/speed detect/reset
         tb_phase = "RECONNECT";
         tb_stage = "ASSERT_CONNECTED";
         connected = 1'b1;
         wait_dev_rst_n_reconnect;
         tb_stage = "RECONNECT_RESET_DONE";
 
-        // Repeat one Host -> Device and one Device -> Host transfer
         tb_phase = "RECONNECT_H2D";
         host_to_device_transfer(4'h3);
 

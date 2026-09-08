@@ -1,7 +1,3 @@
-// Reset initializes the encoder to the USB idle (J) state.
-// The transmit controller is responsible for asserting reset
-// before the start of every new packet, ensuring each packet
-// begins from the correct line state.
 module nrzi_encoder (
     input wire clk, rst_n, data_in, serial_valid,
     input [1:0] speed,

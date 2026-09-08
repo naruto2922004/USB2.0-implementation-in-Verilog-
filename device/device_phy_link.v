@@ -2,18 +2,20 @@ module device_phy_link #(
     parameter CLK_FREQ = 48_000_000,
     parameter MAX_SPEED = 2'b11
 )(
-    input clk, por_rst_n, idle, connected, rx_dp, rx_dm, 
-    input next_packet, tx_fifo_wr, rx_fifo_read, rx_read_done,
+    input clk, por_rst_n, idle, connected, rx_dp, rx_dm, accept_data,
+    input next_packet, tx_fifo_wr, rx_fifo_read, rx_read_done, fifo_rst_in,
     input [7:0] tx_fifo_in,
     input [3:0] tx_pid, rx_pid,
     output [1:0] rx_status, speed,
     output [7:0] rx_fifo_out,
-    output tx_dp, tx_dm, device_en, tx_busy, tx_fifo_full, device_rst_n
+    output tx_dp, tx_dm, device_en, tx_busy, tx_fifo_full, device_rst_n, data_pid_valid
 );
     wire nrzi_serial_valid, tx_packet_done, rx_packet_done;
     wire transfering, fifo_empty, buffer_loaded, fifo_read, byte_valid;
     wire [1:0] tx_line_state, rx_line_state;
     wire [7:0] tx_data, rx_data, fifo_out;
+    wire fifo_rst_n;
+    assign fifo_rst_n = !(!device_rst_n || !fifo_rst_in);
 
     device_diff #(
         .CLK_FREQ(CLK_FREQ),
@@ -28,7 +30,7 @@ module device_phy_link #(
         .tx_line_state(tx_line_state),
         .tx_dp(tx_dp),
         .tx_dm(tx_dm),
-        .device_en(device_en),          // Fixed: changed host_en -> device_en
+        .device_en(device_en),
         .rx_dp(rx_dp),
         .rx_dm(rx_dm),
         .rx_line_state(rx_line_state),
@@ -80,7 +82,7 @@ module device_phy_link #(
         .PTR_WIDTH(10)
     ) u_sync_fifo (
         .clk(clk),
-        .rst_n(device_rst_n),         
+        .rst_n(fifo_rst_n),         
         .wr_en(tx_fifo_wr),
         .rd_en(fifo_read),
         .din(tx_fifo_in),
@@ -96,10 +98,12 @@ module device_phy_link #(
         .phy_done(rx_packet_done),
         .fifo_read(rx_fifo_read),
         .read_done(rx_read_done),
+        .accept_data(accept_data),
         .phy_data(rx_data),
         .fifo_out(rx_fifo_out),
         .pid(rx_pid),
-        .status(rx_status)
+        .status(rx_status),
+        .data_pid_valid(data_pid_valid)
     );
 
 endmodule

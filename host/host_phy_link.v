@@ -2,18 +2,21 @@ module host_phy_link #(
     parameter CLK_FREQ = 48_000_000
 )(
     input clk, por_rst_n, idle, connected, rx_dp, rx_dm, start_rst, 
-    input next_packet, tx_fifo_wr, rx_fifo_read, rx_read_done,
+    input next_packet, tx_fifo_wr, rx_fifo_read, rx_read_done, fifo_rst_in, accept_data,
     input [7:0] tx_fifo_in,
     input [3:0] tx_pid, rx_pid,
+    output [1:0] speed,
     output [1:0] rx_status,
     output [7:0] rx_fifo_out,
-    output tx_dp, tx_dm, host_en, reset_busy, tx_busy, tx_fifo_full
+    output tx_dp, tx_dm, host_en, reset_busy, tx_busy, tx_fifo_full, data_pid_valid
 );
     wire [7:0] data;
-    wire rst_n, nrzi_serial_valid, tx_packet_done, rx_packet_done;
+    wire rst_n, nrzi_serial_valid, tx_packet_done, rx_packet_done, fifo_rst_n;
     wire transfering, fifo_empty, buffer_loaded, fifo_read, byte_valid;
-    wire [1:0] tx_line_state, rx_line_state, speed;
+    wire [1:0] tx_line_state, rx_line_state;
     wire [7:0] tx_data, rx_data, fifo_out;
+
+    assign fifo_rst_n = !(!por_rst_n || !fifo_rst_in);
 
     host_diff #(
         .CLK_FREQ(CLK_FREQ)
@@ -97,10 +100,13 @@ module host_phy_link #(
         .phy_done(rx_packet_done),
         .fifo_read(rx_fifo_read),
         .read_done(rx_read_done),
+        .accept_data(accept_data),
+        .fifo_rst_in(fifo_rst_n),
         .phy_data(rx_data),
         .fifo_out(rx_fifo_out),
         .pid(rx_pid),
-        .status(rx_status)
+        .status(rx_status),
+        .data_pid_valid(data_pid_valid)
     );
 
 

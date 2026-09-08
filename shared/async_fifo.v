@@ -1,5 +1,4 @@
-//full and empty status flags to control upstream writes and downstream reads, 
-//disable writes in upstream when full and reads in downstream when empty asyncronously. 
+
 module async_fifo #(
     parameter DEPTH = 16,
     parameter WIDTH = 8,

@@ -1,7 +1,4 @@
-// Device has priority.
-// During High-Speed reset negotiation the device asserts Chirp K
-// while the host is still driving SE0. This models the device
-// overriding the host during chirp detection.
+
 module bus (
     input host_dp, host_dm, device_dp, device_dm,
     input device_en, host_en, connected,
