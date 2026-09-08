@@ -2,21 +2,9 @@
 
 module usb_mouse_tb;
 
-    // ------------------------------------------------------------------
-    // Simulation-only clock frequency.
-    // Every timing constant in host_protocol / mouse_protocol (SOF
-    // period, RESPONSE_TIMEOUT, etc.) is derived from CLK_FREQ, so scaling
-    // it down keeps all relative timing correct while making the
-    // simulation finish in far fewer wall-clock cycles than a real 48 MHz
-    // FS bus would need (SOF alone is 1ms = 48000 cycles at full rate).
-    // Set back to 48_000_000 for a timing-accurate final run.
-    // ------------------------------------------------------------------
-    localparam CLK_FREQ_SIM     = 48_000_000;   // 1/1000 of the real USB FS clock
-    localparam real CLK_PERIOD_NS = 20.833; // clock period itself is independent of CLK_FREQ_SIM
+    localparam CLK_FREQ_SIM     = 48_000_000;   
+    localparam real CLK_PERIOD_NS = 20.833;
 
-    // ------------------------------------------------------------------
-    // DUT I/O
-    // ------------------------------------------------------------------
     reg clk;
     reg por_rst_n;
     reg connected;
@@ -42,9 +30,7 @@ module usb_mouse_tb;
     reg         ep1_valid;
     wire        ep1_sent;
 
-    // ------------------------------------------------------------------
-    // Status code mirror (must match host_protocol's PROTO_* localparams)
-    // ------------------------------------------------------------------
+
     localparam [3:0] PROTO_DISCONNECTED  = 4'b0000;
     localparam [3:0] PROTO_NOT_READY     = 4'b0001;
     localparam [3:0] PROTO_CAN_TAKE_REQ  = 4'b0010;
@@ -54,10 +40,7 @@ module usb_mouse_tb;
     localparam [3:0] PROTO_CRIT_ERROR    = 4'b0110;
     localparam [3:0] PROTO_ERROR         = 4'b0111;
 
-    // ------------------------------------------------------------------
-    // Supported request table (sent in this exact order, per spec)
-    // Mouse HID report descriptor is 50 bytes (0x32), not 63 (0x3F)
-    // ------------------------------------------------------------------
+
     localparam [63:0] REQ_SET_CONFIGURATION_1 = {
         8'h00, 8'h09, 8'h01, 8'h00, 8'h00, 8'h00, 8'h00, 8'h00
     };
@@ -71,9 +54,7 @@ module usb_mouse_tb;
         8'h21, 8'h0B, 8'h01, 8'h00, 8'h00, 8'h00, 8'h00, 8'h00
     };
 
-    // ------------------------------------------------------------------
-    // DUT instantiation
-    // ------------------------------------------------------------------
+
     usb_mouse #(
         .CLK_FREQ(CLK_FREQ_SIM),
         .MAX_SPEED(2'b11)
@@ -104,17 +85,11 @@ module usb_mouse_tb;
         .ep1_sent(ep1_sent)
     );
 
-    // ------------------------------------------------------------------
-    // Clock
-    // ------------------------------------------------------------------
+
     initial clk = 1'b0;
     always #(CLK_PERIOD_NS/2.0) clk = ~clk;
 
-    // ------------------------------------------------------------------
-    // Reset / connect sequence:
-    //   start disconnected -> hold por_rst_n low a few cycles -> release
-    //   it (stays high from then on) -> assert connected
-    // ------------------------------------------------------------------
+
     reg chk_reset, chk_connect, chk_enum;
     reg chk_r1, chk_r2, chk_r3, chk_r4;
     reg chk_transfer, chk_rx_data, chk_reports;
@@ -124,7 +99,7 @@ module usb_mouse_tb;
     initial begin
         por_rst_n         = 1'b0;
         connected         = 1'b0;
-        sw_vacant_address = 7'd5; // address software will hand out for SET_ADDRESS
+        sw_vacant_address = 7'd5; 
 
         chk_reset = 1'b0; chk_connect = 1'b0; chk_enum = 1'b0;
         chk_r1 = 1'b0; chk_r2 = 1'b0; chk_r3 = 1'b0; chk_r4 = 1'b0;
@@ -140,11 +115,6 @@ module usb_mouse_tb;
         chk_connect = 1'b1;
     end
 
-    // ------------------------------------------------------------------
-    // Device side: EP1 (interrupt IN) data source.
-    // Keeps ep1_valid high once alive; changes ep1_in every time the
-    // previous report was consumed by the link (ep1_sent pulses).
-    // ------------------------------------------------------------------
     initial begin
         ep1_in    = 64'h00_00_01_00_00_00_00_00;
         ep1_valid = 1'b0;
@@ -161,10 +131,7 @@ module usb_mouse_tb;
             end
         end
     end
-
-    // ------------------------------------------------------------------
-    // Host side: drain sw_rx_valid data whenever it appears.
-    // ------------------------------------------------------------------
+--
     initial begin
         sw_rx_fifo_read = 1'b0;
         sw_rx_read_done = 1'b0;
@@ -184,9 +151,7 @@ module usb_mouse_tb;
         end
     end
 
-    // ------------------------------------------------------------------
-    // Host side: software request sequencer + interrupt transfer kickoff
-    // ------------------------------------------------------------------
+
     task automatic send_request(input [63:0] req, output reg ok);
         begin
             wait (sw_status == PROTO_CAN_TAKE_REQ);
@@ -197,11 +162,10 @@ module usb_mouse_tb;
             @(posedge clk);
             sw_request_valid = 1'b0;
 
-            // request accepted -> host leaves CAN_TAKE_REQ while it runs the transfer
+
             wait (sw_status != PROTO_CAN_TAKE_REQ);
 
-            // wait for a terminal status: success returns to CAN_TAKE_REQ;
-            // failure lands on NOT_SUPPORTED / EP_STALLED / ERROR / CRIT_ERROR
+R
             wait (sw_status == PROTO_CAN_TAKE_REQ  ||
                   sw_status == PROTO_NOT_SUPPORTED ||
                   sw_status == PROTO_EP_STALLED    ||
@@ -272,10 +236,6 @@ module usb_mouse_tb;
         $finish;
     end
 
-    // ------------------------------------------------------------------
-    // sw_status change monitor removed - status_name() kept for reference
-    // if live debugging is needed again.
-    // ------------------------------------------------------------------
     function [127:0] status_name(input [3:0] s);
         case (s)
             PROTO_DISCONNECTED:  status_name = "DISCONNECTED";
@@ -290,18 +250,13 @@ module usb_mouse_tb;
         endcase
     endfunction
 
-    // ------------------------------------------------------------------
-    // Watchdog
-    // ------------------------------------------------------------------
+
     initial begin
         #20_000_000; // 20 ms absolute cap
         $display("[%0t] WATCHDOG TIMEOUT - simulation did not complete", $time);
         $finish;
     end
 
-    // ------------------------------------------------------------------
-    // Waveform dump
-    // ------------------------------------------------------------------
     initial begin
         $dumpfile("usb_mouse_tb.vcd");
         $dumpvars(0, usb_mouse_tb);
